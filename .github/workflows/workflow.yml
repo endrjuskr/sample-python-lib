@@ -1,0 +1,40 @@
+name: sample-workflow
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  run_tests:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout step
+        uses: actions/checkout@v2
+
+      - name: Bump version and push tag
+        uses: anothrNick/github-tag-action@1.17.2
+        id: bump
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+
+      - name: Checkout bump
+        run: |
+          pip install bump
+
+      - name: Print
+        run: |
+          echo ${{ steps.bump.outputs.tag }}
+          echo ${{ steps.bump.outputs.new_tag }}
+
+      - name: Checkout bump 2
+        run: |
+          bump -m
+
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.6
+        with:
+          commit_message: Bump to ${{ steps.bump.outputs.new_tag }}
+          branch: develop
+
