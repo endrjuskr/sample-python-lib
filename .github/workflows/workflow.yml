@@ -28,11 +28,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@latest
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # This token is provided by Actions, you do not need to create your own token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.bump.outputs.new_tag }}
           release_name: Release ${{ steps.bump.outputs.new_tag }}
@@ -40,7 +41,7 @@ jobs:
 
       - name: Checkout bump
         run: |
-          pip install bump
+          pip install -r requirements.txt
 
       - name: Print
         run: |
@@ -53,6 +54,6 @@ jobs:
 
       - uses: stefanzweifel/git-auto-commit-action@v4.1.6
         with:
-          commit_message: Bump to ${{ steps.bump.outputs.new_tag }}
+          commit_message: Start new version
           branch: develop
 
