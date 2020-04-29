@@ -1,6 +1,7 @@
-from setuptools import setup, find_packages
+from setuptools import setup
 
-setup(name='sample',
+setup(
+      name='sample',
       version='0.2.1',
       description='A sample project',
       install_requires=['numpy>=1.18.2'],
