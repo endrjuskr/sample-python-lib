@@ -37,11 +37,11 @@ jobs:
 
       - name: Checkout bump 2
         run: |
-          bump2version --new-version ${{ steps.bump_dry.outputs.new_tag }} patch setup.py
+          bump2version --current-version ${{ steps.bump_dry.outputs.tag }} --new-version ${{ steps.bump_dry.outputs.new_tag }} patch setup.py
 
       - uses: stefanzweifel/git-auto-commit-action@v4.1.6
         with:
-          commit_message: Start new version
+          commit_message: Release ${{ steps.bump_dry.outputs.new_tag }}
           branch: master
 
       - name: Bump version and push tag
