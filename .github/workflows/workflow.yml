@@ -27,7 +27,6 @@ jobs:
         id: bump_dry
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
           DRY_RUN: true
 
       - name: Checkout bump
@@ -48,7 +47,6 @@ jobs:
         id: bump
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
           DEFAULT_BUMP: ${{steps.bump_dry.outputs.part}}
 
       - name: Create Release
