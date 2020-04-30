@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
       name='sample',
-      version='0.5.0',
+      version='0.5.1',
       description='A sample project',
       install_requires=['numpy>=1.18.2'],
       zip_safe=False,
