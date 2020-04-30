@@ -23,11 +23,33 @@ jobs:
           python -m pip install --upgrade pip
 
       - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.17.2
+        uses: endrjuskr/github-tag-action@master
+        id: bump_dry
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          WITH_V: true
+          DRY_RUN: true
+
+      - name: Checkout bump
+        run: |
+          pip install -r requirements.txt
+
+      - name: Checkout bump 2
+        run: |
+          bump2version --new-version ${{ steps.bump_dry.outputs.new_tag }} patch setup.py
+
+      - uses: stefanzweifel/git-auto-commit-action@v4.1.6
+        with:
+          commit_message: Start new version
+          branch: master
+
+      - name: Bump version and push tag
+        uses: endrjuskr/github-tag-action@master
         id: bump
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
+          DEFAULT_BUMP: ${{steps.bump_dry.outputs.part}}
 
       - name: Create Release
         id: create_release
@@ -36,24 +58,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ steps.bump.outputs.new_tag }}
-          release_name: Release ${{ steps.bump.outputs.new_tag }}
+          release_name: Release ${{steps.bump.outputs.part}} ${{ steps.bump.outputs.new_tag }}
           draft: true
-
-      - name: Checkout bump
-        run: |
-          pip install -r requirements.txt
-
-      - name: Print
-        run: |
-          echo ${{ steps.bump.outputs.tag }}
-          echo ${{ steps.bump.outputs.new_tag }}
-
-      - name: Checkout bump 2
-        run: |
-          bump -m
-
-      - uses: stefanzweifel/git-auto-commit-action@v4.1.6
-        with:
-          commit_message: Start new version
-          branch: develop
 
